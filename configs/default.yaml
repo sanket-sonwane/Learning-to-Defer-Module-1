@@ -1,0 +1,25 @@
+config_version: "1.0.0"
+schema_version: "1.0.0"
+# All intervals in milliseconds unless noted.
+# Sampling cadence is set so a full /proc task scan (~80-100ms on this VM,
+# more under CPU load) fits comfortably inside the sampling period. QA gates
+# (missed-deadline ratio <= 0.30, effective freq >= 0.50 of requested) are
+# fixed in code and verified against these values — tuning the interval here
+# is NOT a threshold loosening.
+sampling_interval_ms: 500
+observation_window_ms: 2500
+task_scan_ms: 500
+system_scan_ms: 500
+psi_scan_ms: 500
+psi_interval_ms: 500
+scheduler_backend: auto
+sched_events:
+  - sched_switch
+  - sched_wakeup
+  - sched_wakeup_new
+  - sched_process_exec
+  - sched_process_exit
+ringbuf_size: 8388608
+overhead_target_cpu_pct: 2.0
+raw_format: jsonl
+processed_format: parquet

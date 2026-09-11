@@ -1,0 +1,11 @@
+scenario: io_heavy
+description: "I/O-heavy workload with sequential writes and reads."
+duration_s: 60
+workloads:
+  - type: io_heavy
+    count: 2
+    duration_s: 55
+    size_mb: 256
+context:
+  label: USER_ACTIVE
+  foreground_app: io_test

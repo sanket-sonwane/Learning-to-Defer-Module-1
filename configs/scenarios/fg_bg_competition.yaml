@@ -1,0 +1,15 @@
+scenario: fg_bg_competition
+description: "Foreground interactive workload with background CPU competition."
+duration_s: 60
+workloads:
+  - type: cpu_intensive
+    count: 3
+    duration_s: 55
+    background: true
+  - type: mixed
+    count: 1
+    duration_s: 55
+    background: false
+context:
+  label: USER_BROWSING
+  foreground_app: browser

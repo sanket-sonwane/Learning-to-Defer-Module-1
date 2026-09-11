@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "m1-observation-framework"
+version = "1.0.0"
+description = "M1 Context & Runtime Data Collection — Learning to Defer"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+# NOTE: pyarrow is required on Linux for Parquet output (see requirements-linux.txt).
+# It is intentionally NOT in the base dependencies so Windows dev stays light.
+# eBPF/libbpf/bcc are system packages on Linux (see scripts/install_linux.sh), not pip.
+
+[project.optional-dependencies]
+linux = ["pyarrow>=13"]
+test = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

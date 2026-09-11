@@ -1,0 +1,10 @@
+scenario: cpu_intensive
+description: "Multiple CPU-intensive tasks competing for CPU."
+duration_s: 60
+workloads:
+  - type: cpu_intensive
+    count: 4
+    duration_s: 55
+context:
+  label: USER_COMPILING
+  foreground_app: stress

@@ -1,0 +1,12 @@
+scenario: fork_churn
+description: "Rapid task creation/exit workload (bounded and safe)."
+duration_s: 60
+workloads:
+  - type: fork_churn
+    count: 1
+    duration_s: 50
+    spawn_rate_per_s: 20
+    max_children: 32
+context:
+  label: USER_COMPILING
+  foreground_app: make

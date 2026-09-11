@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.swp
+.venv/
+*.egg-info/
+.pytest_cache/
+.eggs/
+# Generated BPF artifacts (rebuilt per kernel via scripts/build_bpf.sh)
+src/m1/sched_events/bpf/vmlinux.h
+src/m1/sched_events/bpf/*.o
+# M1 generated artifacts (never commit experiment data)
+data/
+logs/
+# Local dev
+.vscode/
+.DS_Store

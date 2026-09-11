@@ -1,0 +1,10 @@
+scenario: mixed
+description: "Mixed CPU and I/O workload."
+duration_s: 60
+workloads:
+  - type: mixed
+    count: 2
+    duration_s: 55
+context:
+  label: USER_INTERACTING_WITH_IDE
+  foreground_app: ide
