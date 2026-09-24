@@ -1,7 +1,8 @@
 """Versioned YAML configuration loading + canonical scenario resolution.
 
 Canonical scenario IDs (exactly one naming scheme):
-    cpu_intensive, fg_bg_competition, fork_churn, io_heavy, mixed
+    cpu_intensive, fg_bg_competition, fork_churn, interactive_browsing,
+    io_heavy, mixed
 Each resolves to configs/scenarios/<id>.yaml. Unknown IDs fail with the
 valid list; exit code handling lives in the caller (run_collector.sh exits 2).
 """
@@ -15,7 +16,7 @@ REQUIRED_TOP_KEYS = {"config_version", "schema_version", "sampling_interval_ms",
                      "observation_window_ms"}
 
 CANONICAL_SCENARIOS = ("cpu_intensive", "fg_bg_competition", "fork_churn",
-                       "io_heavy", "mixed")
+                       "interactive_browsing", "io_heavy", "mixed")
 DEFAULT_SCENARIO = "cpu_intensive"
 
 

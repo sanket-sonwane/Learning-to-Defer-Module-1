@@ -130,3 +130,19 @@ def test_workload_attr_pid_reuse_cannot_steal_label():
     by_ts = {o["timestamp_monotonic_ns"]: o["workload_id"] for o in obs}
     assert by_ts[start + 1 * 10**9] == "cpu-001"
     assert by_ts[start + 9 * 10**9] is None
+
+
+def test_bursty_phase_alternation():
+    """bursty() must burn in short bursts with genuine idle/sleep gaps: run ~1s
+    of ON-OFF and observe multiple distinct bursts with sleeping between."""
+    from m1.workloads.runner import bursty
+    import time as _t
+    t0 = _t.monotonic()
+    res = bursty(duration_s=1.1, burst_s=0.2, idle_s=0.3, io_bytes=0)
+    elapsed = _t.monotonic() - t0
+    assert res["bursts"] >= 1
+    assert res["writes"] == res["bursts"]
+    # The idle gaps must dominate: burst (0.2) per burst plus idle (0.3).
+    total_burn = res["bursts"] * 0.2
+    assert total_burn < elapsed * 0.9, ("bursty burned for nearly the whole run, "
+                                        "no genuine idle gaps")

@@ -13,7 +13,8 @@ def test_scenario_resolution():
     repo = _repo()
     assert DEFAULT_SCENARIO == "cpu_intensive"
     assert set(CANONICAL_SCENARIOS) == {"cpu_intensive", "fg_bg_competition",
-                                        "fork_churn", "io_heavy", "mixed"}
+                                        "fork_churn", "interactive_browsing",
+                                        "io_heavy", "mixed"}
     # Every canonical id resolves and its internal id agrees with the file.
     for sid in CANONICAL_SCENARIOS:
         p = resolve_scenario(sid, repo)

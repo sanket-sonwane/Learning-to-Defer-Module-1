@@ -64,6 +64,39 @@ def mixed(duration_s: float, path: str = "") -> None:
             f.flush()
 
 
+def bursty(duration_s: float, burst_s: float = 2.0, idle_s: float = 3.0,
+           io_bytes: int = 65536, path: str = "") -> dict:
+    """Deterministic ON-OFF interactive-style workload.
+
+    Browser-like pattern: a short CPU burst (with one small paced I/O write)
+    followed by a genuine idle/sleep interval, repeated. The idle gaps leave
+    cores unused — unlike the steady cpu_intensive / mixed loops — which is
+    what distinguishes interactive from compile-style load. Returns phase
+    counts.
+    """
+    if not path:
+        import tempfile
+        fd, path = tempfile.mkstemp(prefix="m1_bursty_", suffix=".bin")
+        os.close(fd)
+    chunk = b"\x02" * max(0, min(io_bytes, 65536))
+    end = time.monotonic() + duration_s
+    bursts = writes = 0
+    x = 1.0
+    while time.monotonic() < end:
+        burst_end = min(time.monotonic() + burst_s, end)
+        while time.monotonic() < burst_end:
+            for _ in range(20000):
+                x = (x * 1.000001) % 1000.0
+        with open(path, "ab") as f:
+            f.write(chunk)
+        writes += 1
+        bursts += 1
+        remaining = end - time.monotonic()
+        if remaining > 0:
+            time.sleep(min(idle_s, remaining))
+    return {"bursts": bursts, "writes": writes}
+
+
 def fork_churn(duration_s: float, spawn_rate_per_s: float = 20.0,
                max_children: int = 32) -> dict:
     """Rapid short-lived children (bounded). Returns spawn/exit counts."""
@@ -120,6 +153,10 @@ class WorkloadRunner:
         code = {
             "cpu_intensive": f"from m1.workloads.runner import cpu_intensive; cpu_intensive({duration_s})",
         }.get(kind)
+        if code is None and kind == "bursty":
+            code = (f"from m1.workloads.runner import bursty; "
+                    f"bursty({duration_s}, {kw.get('burst_s', 2.0)}, "
+                    f"{kw.get('idle_s', 3.0)}, {kw.get('io_bytes', 65536)})")
         if code is None and kind == "mixed":
             import tempfile as _tmp
             fd, mp = _tmp.mkstemp(prefix="m1_mixed_", suffix=".bin")

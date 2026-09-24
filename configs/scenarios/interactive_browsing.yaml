@@ -1,0 +1,24 @@
+scenario: interactive_browsing
+description: "Interactive bursty browsing-style foreground with light/moderate background contention."
+duration_s: 60
+workloads:
+  - type: bursty
+    count: 3
+    duration_s: 55
+    burst_s: 2.0
+    idle_s: 3.0
+    io_bytes: 65536
+    background: false
+  - type: cpu_intensive
+    count: 1
+    duration_s: 55
+    background: true
+  - type: io_heavy
+    count: 1
+    duration_s: 55
+    size_mb: 64
+    path: /tmp/m1_io_bg.bin
+    background: true
+context:
+  label: USER_BROWSING
+  foreground_app: browser
